@@ -1,5 +1,5 @@
 {
-    "python.pythonPath": "venv/bin/python",
+    "python.pythonPath": "/Users/sean/Documents/PROGRAMMING/Python_Shit/project_venv/bin/python3",
     "python.formatting.provider": "black"
 
 }
