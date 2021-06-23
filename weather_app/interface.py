@@ -8,21 +8,33 @@ from tkinter import ttk
 # GLOBALS
 #
 app = tk.Tk()
-tab_control = ttk.Notebook(app)
-
 
 def init_app(name):
+    """
+    breif: Adds a title, sets window sizes, and creates menubar for the app. 
+    return: None
+    """
     global app
     app.title(f'{name}')
     app.minsize(width=512, height=256) 
 
+    generate_menubar()
+
 def _quit_app():
+    """
+    breif: call back for quiting the application 
+    return: None
+    """
     global app
     app.quit()
     app.destroy()
     exit()
 
 def generate_menubar():
+    """
+    breif: creates a menu bar for general saving, opening, closing functions 
+    return: None 
+    """
     
     global app
 
@@ -45,121 +57,94 @@ def generate_menubar():
     quit_menu.add_command(label='Close', command=_quit_app)
     menu_bar.add_cascade(label='Exit', menu=quit_menu)
 
-def generate_weather_conditions_window():
-    global tab_control
-
-    """build the tab"""
-    tab1 = ttk.Frame(tab_control)           # create
-    tab_control.add(tab1, text='Tab 1')     # add
+def create_tab(tab_control, name:str='Tab'):
+    """
+    breif: adds a tab to the app interface
+    param: tab_control  - the controller for all tabs
+    param: name         - the name given to the tab
+    return: tab         - the generated tab
+    """
+    tab = ttk.Frame(tab_control)           # create
+    tab_control.add(tab, text=f'{name}')     # add
     tab_control.pack(expand=1, fill='both') # display
+    return tab
 
+def create_frame(tab, r:int, c:int, name:str='Window'):
+    """
+    breif: adds a frame to a tab
+    param: tab      - the tab to which to add the frame
+    param: r        - the row of the tab
+    param: c        - the column of the tab
+    param: name     - the name given to the label
+    return: frame   - the generated frame
+    """
+    frame = ttk.LabelFrame(tab, text=f'{name}: ')
+    frame.grid(row=r, column=c, padx=8, pady=4)
+    return frame
 
-    """build first parent frame for combo widgets"""
-    weather_cities_frame = ttk.LabelFrame(tab1, text='Latest Observation For: ')
-    weather_cities_frame.grid(column=0, row=0, padx=8, pady=4)
+def create_label_and_entry(frame, r:int, c:int, size:int, name:str='Label'):
+    """
+    breif: adds a labelled and a read only entry box to a frame
+    param: frame    - the frame to which to add the label and entry 
+    param: r        - the row of the frame
+    param: c        - the column of the frame
+    param: name     - the name given to the label
+    return: update  - tk strink variable
+    """
+    ttk.Label(frame, text=f'{name}: ').grid(row=r, column=c, padx=8, pady=4, sticky='W')
+    update = tk.StringVar()
+    updateEntry = ttk.Entry(frame, width=size, textvariable=update, state='readonly')
+    updateEntry.grid(row=r, column=c+1, sticky='W')
+    return update
 
-    ### LOCATION ###
-    ttk.Label(weather_cities_frame, text='Location: ').grid(column=0, row=0, padx=8, pady=4, sticky='W')
+def create_label_and_combo(frame, r:int=0, c:int=0, name:str='Combo'):
+    """
+    breif: adds a labelled dropdown box to a specified frame
+    param: frame    - the frame to which to add the dropdown box
+    param: r        - the row of the frame
+    param: c        - the column of the frame
+    param: name     - the name given to the label
+    return: str     - tk strink variable
+    return: width   - length of label and combo box
+    """
+    ttk.Label(frame, text=f'{name}').grid(row=r, column=c, padx=8, pady=4, sticky='W')
 
-    city = tk.StringVar()
-    citySelected = ttk.Combobox(weather_cities_frame, width=12, textvariable=city)
-    citySelected['values'] = ('Los Angeles', 'New York', 'Rio de Janeiro, Brazil')
-    citySelected.grid(column=1, row=0, padx=8, pady=4, sticky='W')
-    citySelected.current(0)
-    max_width = max([len(x) for x in citySelected['values']])
-    citySelected.config(width=max_width-4)
-    entry_width = max_width-4
-
-
-    """build second parent frame for entry widgets"""
-    weather_conditions_frame = ttk.LabelFrame(tab1, text='Current Weather Conditions')
-    weather_conditions_frame.grid(column=0, row=1, padx=8, pady=4)
-    roww = 0
-
-    ### LAST UPDATE ###
-    ttk.Label(weather_conditions_frame, text='Last Updated: ').grid(column=0, row=roww, padx=8, pady=4, sticky='W')
-    updated = tk.StringVar()
-    updatedEntry = ttk.Entry(weather_conditions_frame, width=entry_width, textvariable=updated, state='readonly')
-    updatedEntry.grid(column=1, row=roww, sticky='W')
-    roww += 1
-    
-    ### WEATHER ###
-    ttk.Label(weather_conditions_frame, text='Weather: ').grid(column=0, row=roww, padx=8, pady=4, sticky='W')
-    weather = tk.StringVar()
-    weatherEntry = ttk.Entry(weather_conditions_frame, width=entry_width, textvariable=weather, state='readonly')
-    weatherEntry.grid(column=1, row=roww, sticky='W')
-    roww += 1
-
-    ### TEMPERATURE ###
-    ttk.Label(weather_conditions_frame, text='Temperature: ').grid(column=0, row=roww, padx=8, pady=4, sticky='W')
-    temp = tk.StringVar()
-    tempEntry = ttk.Entry(weather_conditions_frame, width=entry_width, textvariable=temp, state='readonly')
-    tempEntry.grid(column=1, row=roww, sticky='W')
-    roww += 1
-
-    ### DEWPOINT ###
-    ttk.Label(weather_conditions_frame, text='Dewpoint: ').grid(column=0, row=roww, padx=8, pady=4, sticky='W')
-    dew = tk.StringVar()
-    dewEntry = ttk.Entry(weather_conditions_frame, width=entry_width, textvariable=dew, state='readonly')
-    dewEntry.grid(column=1, row=roww, sticky='W')
-    roww += 1
-
-    ### HUMIDITY ###
-    ttk.Label(weather_conditions_frame, text='Humidity: ').grid(column=0, row=roww, padx=8, pady=4, sticky='W')
-    humid = tk.StringVar()
-    humidEntry = ttk.Entry(weather_conditions_frame, width=entry_width, textvariable=humid, state='readonly')
-    humidEntry.grid(column=1, row=roww, sticky='W')
-    roww += 1
-
-    ### WIND ###
-    ttk.Label(weather_conditions_frame, text='Wind: ').grid(column=0, row=roww, padx=8, pady=4, sticky='W')
-    wind = tk.StringVar()
-    windEntry = ttk.Entry(weather_conditions_frame, width=entry_width, textvariable=wind, state='readonly')
-    windEntry.grid(column=1, row=roww, sticky='W')
-    roww += 1
-
-    ### Visibility ###
-    ttk.Label(weather_conditions_frame, text='Visibility: ').grid(column=0, row=roww, padx=8, pady=4, sticky='W')
-    visibility = tk.StringVar()
-    visibilityEntry = ttk.Entry(weather_conditions_frame, width=entry_width, textvariable=visibility, state='readonly')
-    visibilityEntry.grid(column=1, row=roww, sticky='W')
-    roww += 1
-
-    ### Pressure ###
-    ttk.Label(weather_conditions_frame, text='Pressure: ').grid(column=0, row=roww, padx=8, pady=4, sticky='W')
-    pressure = tk.StringVar()
-    pressureEntry = ttk.Entry(weather_conditions_frame, width=entry_width, textvariable=pressure, state='readonly')
-    pressureEntry.grid(column=1, row=roww, sticky='W')
-    roww += 1
-
-    ### Altimeter ###
-    ttk.Label(weather_conditions_frame, text='Altimeter: ').grid(column=0, row=roww, padx=8, pady=4, sticky='W')
-    altimeter = tk.StringVar()
-    altimeterEntry = ttk.Entry(weather_conditions_frame, width=entry_width, textvariable=altimeter, state='readonly')
-    altimeterEntry.grid(column=1, row=roww, sticky='W')
-    roww += 1
-
-def generate_second_window():
-    global tab_control
-    
-    tab2 = ttk.Frame(tab_control)           # create
-    tab_control.add(tab2, text='Tab 2')     # add
-    tab_control.pack(expand=1, fill='both') # display
-    
-def populate_gui_from_dic(dict):
-    pass
-
+    combo_str = tk.StringVar()
+    strSelected = ttk.Combobox(frame, width=16, textvariable=combo_str)
+    strSelected['values'] = ('Los Angeles', 'New York', 'Rio de Janeiro, Brazil')
+    strSelected.grid(column=1, row=0, padx=8, pady=4, sticky='W')
+    strSelected.current(0)
+    max_width = max([len(x) for x in strSelected['values']])
+    strSelected.config(width=max_width-4)
+    width = max_width-4
+    return combo_str, width
 
 def main():
 
     init_app("WEATHER APP")
-    generate_menubar()
-    generate_weather_conditions_window()
-    generate_second_window()
+
+    tab_control = ttk.Notebook(app)
+    tab1 = create_tab(tab_control, "Tab 1")
+    tab2 = create_tab(tab_control, "Tab 2")
+
+    # TAB 1, FRAME 1 # 
+    weather_cities_frame = create_frame(tab1, 0, 0, 'Latest Observation For')
+    city, entry_width = create_label_and_combo(weather_cities_frame, 0, 0, 'Location')
+    
+    # TAB1, FRAME 2 #
+    weather_conditions_frame = create_frame(tab1, 1, 0, 'Current Weather Conditions')
+    updated = create_label_and_entry(weather_conditions_frame, 0, 0, entry_width, 'Last Updated')
+    weath = create_label_and_entry(weather_conditions_frame, 1, 0, entry_width, 'Weather')
+    temp = create_label_and_entry(weather_conditions_frame, 2, 0, entry_width, 'Temperature')
+    dewpoint = create_label_and_entry(weather_conditions_frame, 3, 0, entry_width, 'Dew Point')
+    humidity = create_label_and_entry(weather_conditions_frame, 4, 0, entry_width, 'Humidity')
+    wind = create_label_and_entry(weather_conditions_frame, 5, 0, entry_width, 'Wind')
+    visibility = create_label_and_entry(weather_conditions_frame, 6, 0, entry_width, 'Visibility')
+    pressure = create_label_and_entry(weather_conditions_frame, 7, 0, entry_width, 'Pressure')
+    altimeter = create_label_and_entry(weather_conditions_frame, 8, 0, entry_width, 'Altimeter')
 
     data_dict = weather.call_weather_api()
     print(data_dict)
-    populate_gui_from_dic(data_dict)
 
     app.mainloop()
     
