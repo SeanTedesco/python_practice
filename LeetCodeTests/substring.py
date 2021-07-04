@@ -56,7 +56,8 @@ def length_of_longest_substring_mapping(s:str) -> int:
 def main():
     s = "abcabcac"
     val = length_of_longest_substring_mapping(s)
-    print(val)
+    for i in range(5):
+        print(i%3)
 
 if __name__ == '__main__':
     main()

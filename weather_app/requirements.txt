@@ -1,3 +1,2 @@
-collections
 requests
-tkinter
+pillow
