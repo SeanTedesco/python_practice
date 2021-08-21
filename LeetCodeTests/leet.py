@@ -139,12 +139,113 @@ for i in range(len(haystack)):
         print(f'found needle: {i}')
 print(-1)"""
 
-###############################################################
+################################################################
+"""
+class Solution:
+    def longestPalindrome(self, s: str) -> str:
+        if len(s) == 1:
+            return s
+        
+        palindrome = ''
+        
+        for i in range(len(s)):
+            for j in range(len(s), i, -1):
+                if len(palindrome) > j-i:
+                    break
+                elif s[i:j] == s[i:j][::-1]:
+                    palindrome = s[i:j]
+                    break
+        return palindrome
 
-l1 = 5
-l2 = 5
+solution = Solution()
+answer = solution.longestPalindrome(s = "abcdef")
+print(answer)
+"""
+################################################################
+"""
+class Solution:
+    def longestPalindrome(self, s: str) -> str:
+        if len(s) == 1:
+            return s
+        
+        palindrome = ''
+        
+        for i in range(len(s)):
+            even = self.found_palindrome_at(s, i, i+1)
+            odd = self.found_palindrome_at(s, i, i)
 
-carry = (l1+l2) // 10 
-keep = (l1+l2) % 10
+            palindrome = max(palindrome, odd, even, key=len)
 
-print(keep, carry)
+        return palindrome
+
+    def found_palindrome(self, s, l, r):
+        while l >= 0 and r < len(s) and s[l] == s[r]:
+            l -= 1
+            r += 1
+        return s[l+1:r]
+    
+solution = Solution()
+answer = solution.longestPalindrome(s = "cababcdef")
+print(answer)
+
+
+# NOTE: Centre can be even or odd.  'abba' or 'cec' 
+# Move centre across length of the string finding new protential odd and even seeds. 
+# expand from seed matching characters on either side of it to put more elements into the palindrome. 
+# compare these even and odds to the existing palindrome and assign the one with the max to length palindrome. 
+# O(n^2) runtime - at worst loop through each element in first inner loop and at worst run through second helper loop 0.5n times. 
+# O(n) space time - creating new instance of palindrome string. 
+"""
+################################################################
+"""
+class Solution:
+    def convert(self, s: str, numRows: int) -> str:
+        
+        if numRows == 1: return s 
+     
+        current_row = 0
+        going_down = False 
+        
+        rows = []
+        for i in range(numRows):
+            rows.append([])
+        
+        for c in s:
+            rows[current_row] += c
+            
+            if current_row == 0 or current_row == numRows-1:
+                going_down = not going_down 
+                
+            current_row = current_row + 1 if going_down else current_row - 1 
+            
+        zigzag = ''    
+        for row in rows:
+            for letter in row:
+                zigzag += letter
+        
+        return zigzag 
+"""
+################################################################
+from typing import List
+class Solution:
+    def maxArea(self, height: List[int]) -> int:
+        
+        max_area = 0
+        left, right = 0, len(height)-1 
+        
+        while left < right:
+            
+            length = right-left
+            width = min(height[right], height[left])
+            max_area = max(max_area, length*width)
+            
+            if height[left] <= height[right]:
+                left += 1
+            else:
+                right -= 1
+
+        return max_area 
+
+solution = Solution()
+answer = solution.maxArea(height = [1,8,6,2,5,4,8,3,7])
+print(answer)

@@ -1,10 +1,14 @@
 import json
+import base64
+import requests
 import urllib.request as req
 import urllib.error as err
 import xml.etree.ElementTree as ET
 from html.parser import HTMLParser
 from datetime import datetime
 from API_KEY import OWM_API_KEY
+from PIL import Image
+from io import BytesIO
 
 class html_parser(HTMLParser):
     def __init__(self):
@@ -66,8 +70,15 @@ def print_ending(ending:str=""):
     print(f'\t\t {ending}')
     print("-----------------------------------------")
 
-def _call_weather_api(url_extension):
-    url = 'http://www.weather.gov/xml/current_obs/' + url_extension
+def _call_gov_weather_api(url_extension):
+    """
+        breif: sends an HTTP request to the 'weather.gov' api
+        return: request         -  a url content oject containing basic xml data ( needs to be read() and decode() )
+
+        param: url_extension    - the extension with station / city ID to collect the weather from. 
+    """
+
+    url = 'http://www.weather.gov/' + url_extension
     try:
         request = req.urlopen(url)
     except err.HTTPError as e:
@@ -76,9 +87,18 @@ def _call_weather_api(url_extension):
         return None
     return request
 
-def get_weather_by_station(id):
-    weather_url = f'{id}.xml'
-    request = _call_weather_api(weather_url)
+def get_gov_weather_by_station(id):
+    """
+        breif: populates the weather_data dictionary with data provided from the given airport station ID. 
+        return: weather_data    - a copy of the weather_data dictionary or None if problem with request.   
+
+        param: id               - the airpoirt station ID to collect the weather from. 
+    """
+    weather_url = f'xml/current_obs/{id}.xml'
+    request = _call_gov_weather_api(weather_url)
+    if request is None:
+        return None 
+
     content = request.read().decode()
     xml_root = ET.fromstring(content)
 
@@ -87,13 +107,21 @@ def get_weather_by_station(id):
             weather_data[data_point] = xml_root.find(data_point).text
         except:
             print(f'{data_point} not found in xml file')
+            weather_data[data_point] = ' '
 
     return weather_data
 
 def get_stations_by_state(state_id):
+    """
+        breif: generates airport station ids given a state in the USA. Used alongside 'get_gov_weather_by_station()' 
+
+        return: tuple: (stations, cities)   - a list of tuples of cities with their matching airport stations found within the state    
+
+        param: state_id                     - the two letter state ID Ex: FL -> Florida, NY -> New York 
+    """
     state_id = state_id.lower()
-    stations_url = f'seek.php?state={state_id}&Find=Find'
-    request = _call_weather_api(stations_url)
+    stations_url = f'xml/current_obs/seek.php?state={state_id}&Find=Find'
+    request = _call_gov_weather_api(stations_url)
     content = request.read().decode() #HTML CONTENT
 
     parser = html_parser()
@@ -106,27 +134,54 @@ def get_stations_by_state(state_id):
         return None
 
 def _call_open_weather_api(url_extension):
+    """
+        breif: sends an HTTP request to the 'openweathermap.org' api
+        return: request         -  a url content oject containing json data
+
+        param: url_extension    - the extension with the city name and country code ('Niagara Falls, CA') to collect the weather from. 
+    """
+
     url = 'http://api.openweathermap.org' + url_extension
     try:
         request = req.urlopen(url)
-    except err.HTTPError as e:
+    except Exception as e:
         print(e, end=' ')
         print(url)
         return None
     return request
 
 def get_open_weather_data(city:str='London, UK'):
+    """
+        brief: gets the weather data from a city location
+        return: a dictionary containing the available weather data 
+
+        parma: city - the city to get the weather data from
+    """
     city = city.replace(' ', '%20')
     extension = f'/data/2.5/weather?q={city}&appid={OWM_API_KEY}'
     response = _call_open_weather_api(extension)
     if response is not None:
         data = response.read().decode()
         return json.loads(data)
+    else:
+        return None 
 
-def get_open_weather_image(weather_icon:str='04n'):
-    extension = f'/img/w/{weather_icon}.png'
-    img = _call_open_weather_api(extension)
-    return img
+def get_open_weather_image(weather_icon:str='01d'):
+    """
+        brief: gets the icon data acording to the icon code specified.
+        For full list of icons vist: 'https://openweathermap.org/weather-conditions' 
+
+        return: a byte array of the icon
+
+        param: weather_icon - the icon code to send to the open weather map api 
+    """
+
+    url = 'http://openweathermap.org/img/wn/{icon}.png'.format(icon=weather_icon)
+    response = requests.get(url, stream=True)
+    if response.status_code == 200:
+        return base64.encodebytes(response.raw.read()) 
+    else:
+        return None
 
 def kelvin_to_celcius(temp_k):
     return "{:.1f}".format(temp_k - 273.15)
@@ -144,10 +199,14 @@ def mps_to_mph(meter_second):
     return "{:.1f}".format((meter_second*2.23693629))
 
 def main():
+
     print_beginning("WEATHER APP")
-
-    get_open_weather_data()
-
+    
+    weather_data = get_open_weather_data('Montreal, CA')
+    weather_image = get_open_weather_image('01d')
+    
+    print(weather_data)
+    print(weather_image)
 
     print_ending("GOOD BYE")
     

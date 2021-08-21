@@ -1,27 +1,11 @@
-# Weather App
+# Movie Searcher App
 
-## Learning Objectives and Running Application
-This is a big tkinter learning exersice. Tkinter is used to create a GUI to collect weather information from the resources [weather.gov](http://www.weather.gov) and [Open Weather Map](http://api.openweathermap.org). 
-
-To run this application follow the setup steps and then run the `interface.py` program by changing into the weather_app directory and executing the interface script: 
-
-```
-cd weather_app/
-python src/interface.py
-``` 
-
-## Open Weather Map Setup 
-1.0 Register for an acount at [Open Weather Map](https://openweathermap.org/) and generate your individul API key. 
-2.0 create a file called API_KEY.py and insert the line `OWM_API_KEY = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'` where the x's are your API key. 
-2.1 Place this file into the weather_app/src directory. 
-
-
-## Setup for MACS
+## For MACS
 1.0 Create a virtual environment and activate it.
 
 ```
-$ python -m venv weather-venv
-$ . weather-venv/bin/activate
+$ python -m venv searcher-venv
+$ . searcher-venv/bin/activate
 ```
 
 1.1 Ensure the environment was activated succesfully.
@@ -31,7 +15,7 @@ $ which python
 ```
 Should read:
 ```
-    .../weather_app/weather-venv/bin/python
+    ... movie_searcher/searcher-venv/bin/python
 ```
 
 1.2  And check pip that it is relatively empty. 
@@ -61,12 +45,12 @@ $ pip install -r requirements.txt
 python3 -m interface.py
 ```
 
-## Setup for Windows
+## For Windows
 1.0 Create a virtual environment and activate it. 
 
 ```
-$ python -m venv weather-venv
-$ . weather-venv\Scripts\activate
+$ python -m venv searcher-venv
+$ . searcher-venv\Scripts\activate
 ```
 
 1.1 Ensure the environment was activated succesfully.
@@ -77,7 +61,7 @@ $ where python
 
 Should read:
 ```
-    .../weather_app/weather-venv/bin/python
+    .../searcher_app/searcher-venv/bin/python
 ```
 
 1.2  And check pip that it is relatively empty. 
@@ -106,3 +90,26 @@ $ pip install -r requirements.txt
 ```
 python3 -m interface.py
 ```
+
+# RESTFul API
+the api (used in this example)[https://movieservice.talkpython.fm/] has limied functionality. There is an open movie database found at (the open movie database)[http://www.omdbapi.com/] that has more selction. 
+
+
+# Take Aways
+## Keyword Arguements 
+
+We can pass any arbitrary list of parameters into a function beyond what is identified in the function definition by including **kwargs. 
+The parameters that get passed into the keyword arguement will be held in a dictionary called kwargs. (kwargs is actually just a conventional name)
+Example: 
+```
+def method(x, y, z, **kwargs):
+    print("kwargs= ", kwargs)
+
+method(3, 7, z=2, format=True, age=7)
+> kwargs = {'format': True, 'age': 7}
+```
+
+We can also go the other direction provided that the names in the dictionary explicitly match our named tuble. So instead of going from keywords to dictionary, we can create create keywords from a dictionary. 
+Example: 
+md = dict()
+m = MovieResult(**md)

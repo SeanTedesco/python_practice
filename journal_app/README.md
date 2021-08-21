@@ -12,3 +12,93 @@ The imports and loading and saving a file were basic steps but it was a good int
 independicies and structuring a project. Going forward it will be easier to revisit handling image files for
 the CROS-Sat implementation. 
 
+## Setup for MACS
+1.0 Create a virtual environment and activate it.
+
+```
+$ python -m venv journal-venv
+$ . journal-venv/bin/activate
+```
+
+1.1 Ensure the environment was activated succesfully.
+
+```
+$ which python
+```
+Should read:
+```
+    .../journal_app/journal-venv/bin/python
+```
+
+1.2  And check pip that it is relatively empty. 
+
+```
+$ pip list
+    Package     Version
+    ----------  -------
+    pip         20.2.3
+    setuptools  49.2.1
+```
+
+1.3 Update pip and setup tools
+
+```
+$ pip install --upgrade pip setuptools
+```
+
+1.4 Install all the required dependencies with pip. 
+
+```
+$ pip install -r requirements.txt
+```
+
+1.5 Run the program.py main file. *Note you have to be in the journal_app/ directory to copy and paste this command directly.* 
+```
+python program.py
+```
+
+## Setup for Windows
+1.0 Create a virtual environment and activate it. 
+
+```
+$ python -m venv journal-venv
+$ . journal-venv\Scripts\activate
+```
+
+1.1 Ensure the environment was activated succesfully.
+
+```
+$ where python
+```
+
+Should read:
+```
+    .../journal_app/journal-venv/bin/python
+```
+
+1.2  And check pip that it is relatively empty. 
+
+```
+$ pip list
+    Package     Version
+    ----------  -------
+    pip         20.2.3
+    setuptools  49.2.1
+```
+
+1.3 Update pip and setup tools
+
+```
+$ pip install --upgrade pip setuptools
+```
+
+1.4 Install all the required dependencies with pip. 
+
+```
+$ pip install -r requirements.txt
+```
+
+1.5 Run the program.py main file. *Note you have to be in the journal_app/ directory to copy and paste this command directly.* 
+```
+python program.py
+```
