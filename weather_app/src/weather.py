@@ -7,8 +7,6 @@ import xml.etree.ElementTree as ET
 from html.parser import HTMLParser
 from datetime import datetime
 from API_KEY import OWM_API_KEY
-from PIL import Image
-from io import BytesIO
 
 class html_parser(HTMLParser):
     def __init__(self):
@@ -58,19 +56,19 @@ weather_data = {
     'wind_string': '',
 }
 
-def print_beginning(title:str=""):
+def print_beginning(title:str="") -> None:
     print("-----------------------------------------")
     print(f'\t\t {title}')
     print("-----------------------------------------")
     print()
 
-def print_ending(ending:str=""):
+def print_ending(ending:str="") -> None:
     print()
     print()
     print(f'\t\t {ending}')
     print("-----------------------------------------")
 
-def _call_gov_weather_api(url_extension):
+def _call_gov_weather_api(url_extension) -> req.Request:
     """
         breif: sends an HTTP request to the 'weather.gov' api
         return: request         -  a url content oject containing basic xml data ( needs to be read() and decode() )
@@ -183,6 +181,19 @@ def get_open_weather_image(weather_icon:str='01d'):
     else:
         return None
 
+def save_base64_image(b64_img_string: str, image_name: str) -> None:
+    """
+    breif: used to save images that have been encoded with base64 encoding.
+    return: None
+
+    param: b64_img_string - the encoded base 64 string.
+    param: the name of the image file that gets saved.
+    """
+    img_data = base64.b64decode(b64_img_string)
+    filename = image_name + '.jpg'
+    with open(filename, 'wb') as f:
+        f.write(img_data)
+
 def kelvin_to_celcius(temp_k):
     return "{:.1f}".format(temp_k - 273.15)
 
@@ -203,10 +214,10 @@ def main():
     print_beginning("WEATHER APP")
     
     weather_data = get_open_weather_data('Montreal, CA')
-    weather_image = get_open_weather_image('01d')
-    
     print(weather_data)
-    print(weather_image)
+
+    weather_image = get_open_weather_image('01d')
+    save_base64_image(weather_image)
 
     print_ending("GOOD BYE")
     

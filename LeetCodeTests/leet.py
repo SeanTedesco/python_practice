@@ -1,4 +1,6 @@
-"""strs = ["ab","a"]
+from typing import List
+"""
+strs = ["ab","a"]
 
 
 def longestCommonPrefix(strs):
@@ -226,6 +228,7 @@ class Solution:
         return zigzag 
 """
 ################################################################
+"""
 from typing import List
 class Solution:
     def maxArea(self, height: List[int]) -> int:
@@ -245,7 +248,259 @@ class Solution:
                 right -= 1
 
         return max_area 
+"""
+################################################################
+"""from typing import List
+class Solution:
+    def maxSubArray(self, nums: List[int]) -> int:
+        if len(nums) == 1:
+            return nums[0]
+        
+        current = nums[0]
+        max_sum = current
+        
+        for i in range(1, len(nums)):
+            
+            current = max(nums[i], current + nums[i])
+            max_sum = max(max_sum, current)
+                
+        return max_sum
+"""
+################################################################
+
+"""
+class Solution:
+    def plusOne(self, digits: List[int]) -> List[int]:
+        
+        digits = digits
+
+        i, carry = len(digits)-1, 1
+        while carry:
+
+            if i == -1:
+                digits.insert(0, 1)
+                break
+
+            value = digits[i] + carry
+            summ, carry = value % 10, value // 10
+            digits[i] = summ
+            i -= 1
+            print(f"sum: {summ}, carry: {carry}")
+                
+        return digits
+"""
+"""
+class Solution:
+    def merge(self, nums1: List[int], m: int, nums2: List[int], n: int) -> None:
+        for i in range(n):
+            j = m + i
+            
+            nums1[j] = nums2[i]  
+            
+            while nums1[j] < nums1[j-1] and j-1 >= 0:
+                nums1[j], nums1[j-1] = nums1[j-1], nums1[j]
+                j -= 1
+            
+            if j-1 == 0 and nums1[j] < nums1[j-1]:
+                nums1[j], nums1[j-1] = nums1[j-1], nums1[j]
+"""
+"""class Solution:
+    def merge(self, nums1: List[int], m: int, nums2: List[int], n: int) -> None:
+
+        while m > 0 and n > 0:
+
+            # if nums1 has the bigger element
+            if nums1[m-1] > nums2[n-1]:
+                nums1[m+n-1] = nums1[m-1]
+                m -= 1
+            else:
+                # nums2 has the bigger element
+                nums1[m+n-1] = nums2[n-1]
+                n -= 1
+        
+        while n > 0:
+            nums1[n-1] = nums2[n-1]
+            n -= 1
+
+
+
+
+nums1 = [6, 7, 0]
+nums2 = [2]
+
+n = len(nums2)
+m = len(nums1) - len(nums2)
+solution = Solution()
+solution.merge(nums1, m, nums2, n)
+print(nums1)
+"""
+################################################################
+"""
+class Solution:
+    def containsDuplicate(self, nums: List[int]) -> bool:
+        
+        for i in range(len(nums)):
+            value = nums.pop(0)
+            if value in nums:
+                return True
+            
+        return False
+"""
+################################################################
+"""
+class Solution:
+    def tribonacci(self, n: int) -> int:
+ 
+        #Tn = Tn-3 + Tn-2 + Tn-1 for n >= 
+        
+        memo = {}
+        
+        if n == 0: return 0
+        if n == 1: return 1
+        if n == 2: return 1
+        
+        if (n-3) not in memo: memo[n-3] = self.tribonacci(n-3)
+        if (n-2) not in memo: memo[n-2] = self.tribonacci(n-2)
+        if (n-1) not in memo: memo[n-1] = self.tribonacci(n-1)
+        
+        return memo[n-3] + memo[n-2] + memo[n-1] 
 
 solution = Solution()
-answer = solution.maxArea(height = [1,8,6,2,5,4,8,3,7])
+answer = solution.tribonacci(25)
+print(answer )
+"""
+
+################################################################
+"""
+class Solution:
+    def minCostClimbingStairs(self, cost: List[int]) -> int:
+
+        current = []
+        
+        current.append(cost[0])
+        current.append(cost[1])
+        
+        for i in range(2, len(cost)):
+            current.append( (cost[i] + min(current[i-2], current[i-1])) )
+            print(cost[i], min(cost[i-2], cost[i-1]))
+            print(current)
+            
+            
+        return min(current[-1], current[-2])
+"""
+################################################################
+"""
+class Solution:
+    def sortedSquares(self, nums: List[int]) -> List[int]:
+        
+        for i in range(len(nums)):
+            nums[i] = nums[i]**2
+        
+        nums.sort()
+
+        return nums
+"""
+################################################################
+"""
+class Solution:
+    def rotate(self, nums, k):
+        n = len(nums)
+        k = k % n
+        print(nums, k)
+
+
+        print(nums[2:], nums[:2])
+
+        nums[:] = nums[n-k:] + nums[:n-k]
+"""
+################################################################
+"""
+class Solution:
+    def moveZeroes(self, nums: List[int]) -> None:
+        '''
+        Do not return anything, modify nums in-place instead.
+        
+        1st idea: bubble up the zeros
+        - 2 pointers, one pointing an next available zero,
+        another moving.
+        - move until integer is found, swap integer and zero
+        - must go through entire list. 
+        Time: 
+        Space: O(1)
+        '''
+        
+        if len(nums) == 1: return
+        
+        i, swaps = 0, 0
+        while i < (len(nums) - swaps):
+            if nums[i] == 0:
+                nums.append(nums.pop(i))
+                swaps += 1
+            else:
+                i += 1
+            print(i, nums)
+"""
+################################################################
+"""
+class Solution:
+    def deleteAndEarn(self, nums: List[int]) -> int:
+        
+        if not nums: return 0
+        if len(nums) == 1: return nums[0]
+        
+        points = 0
+        deleted = []
+        for i in range(len(nums)):
+            current = nums[i]
+            deleted.append(nums[i]+1)
+            deleted.append(nums[i]-1)
+    
+            j = 0
+            while j < len(nums):
+                print(f'seed:{nums[i]}, add?: {nums[j]}')
+                print(f'deleted: {deleted}')
+                if nums[j] not in deleted and j != i:
+                    current += nums[j]
+                    deleted.append(nums[j]+1)
+                    deleted.append(nums[j]-1)
+                    print(f'current: {current}')
+                j += 1
+            
+            
+            deleted = []
+
+            points = max(current, points)
+            
+        return points
+"""
+
+class Solution:
+    def generate(self, numRows: int) -> List[List[int]]:
+        
+        triangle = list()
+
+        triangle.append([1])
+        if numRows == 1: return triangle
+        
+        for row in range(1, numRows-1):
+
+            new_row = list()
+
+            for col in range(-1, row):
+
+                if col == -1 or col == row-1: 
+                    new_row.append(1)
+                    continue
+
+            triangle.append(new_row)
+
+
+
+
+
+
+
+
+solution = Solution()
+answer = solution.generate(5)
 print(answer)
