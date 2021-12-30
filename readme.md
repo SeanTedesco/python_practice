@@ -1,13 +1,17 @@
 Work dedicated to building my python skills to contribute to the work at Xiphos. 
 
 # Project List 
-1. File Searcher
-2. Journal Application
-3. Leet Code Practice Problems 
-4. Movie Searcher Application
-5. Py-Duino
-6. Real Estate Data Miner Application 
-7. Weather GUI 
+1. Async
+2. File Searcher
+3. Journal Application
+4. Leet Code Practice Problems 
+5. Movie Searcher Application
+6. Py-Duino
+7. Real Estate Data Miner Application 
+8. Weather GUI 
+
+### Async
+Example exercies demonstrating asynchronous programing techniques in python. Includes asyncio, threading, multiprocessing, and cython. 
 
 ### File Searcher 
 A tool to recursively find keyword matches in a root directory. 
