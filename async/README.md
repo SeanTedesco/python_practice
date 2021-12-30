@@ -107,7 +107,7 @@ GIL: Python Global Interpreter Lock: allows only one thread to hold the control 
 
 ## Typical Mltithreading and Multiprocessing Snippet 
 
--- sean, insert the photo on your desktop here. 
+![Screen Shot 2021-12-30 at 8 08 13 AM](https://user-images.githubusercontent.com/48306876/147773053-be4c2f01-2a7d-4398-823f-9550d3aa8ad7.png)
 
 ## Asyncio
 - runs on an event loop.
@@ -127,7 +127,7 @@ Multiprocessing is useful for programs with heavy computation as it spreads out 
 
 This is a wrapper that ties together the functionality of asyncio, threads, and multiprocessing. It is a clean way to group together all three of these async techniques, but setting only a few parameters including: "cpu_bound=True" for multiprocessing, and including the "async def" for asyncio awaits. 
 
--- sean, insert the photo on your desktop here. 
+![Screen Shot 2021-12-30 at 10 01 53 AM](https://user-images.githubusercontent.com/48306876/147773041-8dc4e462-9cf1-4956-9edb-0340bbecef38.png)
 
 ## Cython
 Cython is an optimising static compiler for both the Python programming language and the extended Cython programming language (based on Pyrex). It makes writing C extensions for Python as easy as Python itself.
