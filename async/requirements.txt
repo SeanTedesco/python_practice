@@ -1,0 +1,10 @@
+colorama
+uvloop
+bs4
+requests
+aiohttp
+aiodns
+cchardet
+unsync
+flask
+cython
